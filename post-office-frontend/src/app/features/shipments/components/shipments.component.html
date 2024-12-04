@@ -1,0 +1,34 @@
+<div class="filter-container">
+  <mat-form-field appearance="fill">
+    <mat-label>Status</mat-label>
+    <mat-select (selectionChange)="onStatusChange($event.value)">
+      <mat-option value="">All</mat-option>
+      <mat-option value="Delivered">Delivered</mat-option>
+      <mat-option value="Origin">Origin</mat-option>
+      <mat-option value="Destination">Destination</mat-option>
+    </mat-select>
+  </mat-form-field>
+</div>
+<div class="shipment-container">
+  <mat-table [dataSource]="shipments" class="mat-elevation-z8">
+    <ng-container matColumnDef="id">
+      <mat-header-cell *matHeaderCellDef> ID </mat-header-cell>
+      <mat-cell *matCellDef="let shipment"> {{ shipment.id }} </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="status">
+      <mat-header-cell *matHeaderCellDef> Status </mat-header-cell>
+      <mat-cell *matCellDef="let shipment"> {{ shipment.status }} </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="type">
+      <mat-header-cell *matHeaderCellDef> Type </mat-header-cell>
+      <mat-cell *matCellDef="let shipment"> {{ shipment.type }} </mat-cell>
+    </ng-container>
+
+    <mat-header-row *matHeaderRowDef="['id', 'status', 'type']"></mat-header-row>
+    <mat-row *matRowDef="let row; columns: ['id', 'status', 'type']"></mat-row>
+  </mat-table>
+
+  <mat-paginator [length]="totalRecord" [pageSize]="pageSize" [pageSizeOptions]="[5, 10, 20]" (page)="onPageChange($event)"></mat-paginator>
+</div>
