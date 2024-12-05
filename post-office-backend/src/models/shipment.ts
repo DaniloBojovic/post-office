@@ -15,8 +15,6 @@ export enum WeightCategory {
   MoreThan5kg = "MoreThan5kg",
 }
 
-export enum WeightCategory {}
-
 export interface Shipment {
   id: number;
   type: ShipmentType;

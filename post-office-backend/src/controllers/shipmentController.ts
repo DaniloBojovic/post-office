@@ -13,7 +13,23 @@ export const getAllShipments = (req: Request, res: Response) => {
     return;
   }
 
-  const { data, total } = shipmentService.getAllShipments(page, limit);
+  const filters = {
+    status: req.query.status as string,
+    weight: req.query.weight as string,
+    id: req.query.id as string,
+    originPostOfficeId:
+      req.query.originPostOfficeId && req.query.originPostOfficeId !== "null"
+        ? parseInt(req.query.originPostOfficeId as string)
+        : null,
+    destinationPostOfficeId:
+      req.query.destinationPostOfficeId && req.query.destinationPostOfficeId !== "null"
+        ? parseInt(req.query.destinationPostOfficeId as string)
+        : null,
+  };
+
+  console.log("filters: ", filters);
+
+  const { data, total } = shipmentService.getAllShipments(page, limit, filters);
   res.json({ data, total, page, limit });
 };
 

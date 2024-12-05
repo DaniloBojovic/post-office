@@ -223,7 +223,7 @@ export const shipments: Shipment[] = [
     id: 321,
     type: ShipmentType.Package,
     status: ShipmentStatus.Origin,
-    weightCategory: WeightCategory.MoreThan5kg,
+    weightCategory: WeightCategory.LessThan1kg,
     originPostOfficeId: 1, // Belgrade Main Post Office
     destinationPostOfficeId: 4, // Novi Sad Central Post Office
   },

@@ -23,7 +23,17 @@ export class ShipmentsService {
   //   return this.http.get<Shipment[]>(this.apiUrl);
   // }
 
-  getShipments(page: number, limit: number, filters: { status?: string } = {}): Observable<{ data: Shipment[]; total: number }> {
+  getShipments(
+    page: number,
+    limit: number,
+    filters: {
+      status?: string;
+      weight?: string;
+      id?: string;
+      originPostOfficeId?: number | null;
+      destinationPostOfficeId?: number | null;
+    } = {}
+  ): Observable<{ data: Shipment[]; total: number }> {
     const params: any = { page, limit, ...filters };
     return this.http.get<{ data: Shipment[]; total: number }>(this.apiUrl, { params });
     //return this.http.get<{ data: Shipment[]; total: number }>(`${this.apiUrl}?page=${page}&limit=${limit}`);

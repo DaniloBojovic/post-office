@@ -2,12 +2,48 @@ import { shipments } from "../data/dataStore";
 import { Shipment, ShipmentStatus, WeightCategory } from "../models/shipment";
 
 export class ShipmentService {
-  getAllShipments(page: number, limit: number): { data: Shipment[]; total: number } {
-    const total = shipments.length;
+  getAllShipments(
+    page: number,
+    limit: number,
+    filters: {
+      status?: string;
+      weight?: string;
+      id?: string;
+      originPostOfficeId?: number | null;
+      destinationPostOfficeId?: number | null;
+    }
+  ): { data: Shipment[]; total: number } {
+    let filteredShipments = shipments;
+
+    if (filters.status) {
+      filteredShipments = filteredShipments.filter((shipment) => shipment.status === filters.status);
+    }
+
+    if (filters.weight) {
+      filteredShipments = filteredShipments.filter((shipment) => shipment.weightCategory === filters.weight);
+    }
+
+    if (filters.id) {
+      filteredShipments = filteredShipments.filter((shipment) => shipment.id.toString() === filters.id);
+    }
+
+    if (filters.originPostOfficeId !== null && filters.originPostOfficeId !== undefined) {
+      filteredShipments = filteredShipments.filter((shipment) => shipment.originPostOfficeId === filters.originPostOfficeId);
+    }
+
+    if (filters.destinationPostOfficeId !== null && filters.destinationPostOfficeId !== undefined) {
+      filteredShipments = filteredShipments.filter(
+        (shipment) => shipment.destinationPostOfficeId === filters.destinationPostOfficeId
+      );
+    }
+
+    //const total = shipments.length;
+    const total = filteredShipments.length;
     const startIndex = (page - 1) * limit;
     const endIndex = page * limit;
+    //const paginatedShipments = shipments.slice(startIndex, endIndex);
+    const paginatedShipments = filteredShipments.slice(startIndex, endIndex);
 
-    const paginatedShipments = shipments.slice(startIndex, endIndex);
     return { data: paginatedShipments, total };
   }
 

@@ -1,4 +1,5 @@
 <div class="filter-container">
+  <!-- Status Filter -->
   <mat-form-field appearance="fill">
     <mat-label>Status</mat-label>
     <mat-select (selectionChange)="onStatusChange($event.value)">
@@ -8,7 +9,45 @@
       <mat-option value="Destination">Destination</mat-option>
     </mat-select>
   </mat-form-field>
+  <!-- Weight Filter -->
+  <mat-form-field appearance="fill">
+    <mat-label>Weight</mat-label>
+    <mat-select (selectionChange)="onWeightChange($event.value)">
+      <mat-option value="">All</mat-option>
+      <mat-option value="LessThan1kg">Less than 1kg</mat-option>
+      <mat-option value="Between1kgAnd5kg">Between 1kg and 5kg</mat-option>
+      <mat-option value="MoreThan5kg">More than 5kg</mat-option>
+    </mat-select>
+  </mat-form-field>
+  <!-- Package ID Filter -->
+  <mat-form-field appearance="fill">
+    <mat-label>Package ID</mat-label>
+    <input matInput type="text" (input)="onIdChange($event)" placeholder="Enter Package ID" />
+  </mat-form-field>
+
+  <!-- Origin Post Office Filter -->
+  <mat-form-field appearance="fill">
+    <mat-label>Origin Post Office</mat-label>
+    <mat-select (selectionChange)="onOriginPostOfficeChange($event.value)">
+      <mat-option [value]="null">All Post Offices</mat-option>
+      <mat-option *ngFor="let postOffice of postOffices" [value]="postOffice.id">
+        {{ postOffice.name }} ({{ postOffice.zipCode }})
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
 </div>
+
+<!-- Destination Post Office Filter -->
+<mat-form-field appearance="fill">
+  <mat-label>Destination Post Office</mat-label>
+  <mat-select (selectionChange)="onDestinationPostOfficeChange($event.value)">
+    <mat-option [value]="null">All Post Offices</mat-option>
+    <mat-option *ngFor="let postOffice of postOffices" [value]="postOffice.id">
+      {{ postOffice.name }} ({{ postOffice.zipCode }})
+    </mat-option>
+  </mat-select>
+</mat-form-field>
+
 <div class="shipment-container">
   <mat-table [dataSource]="shipments" class="mat-elevation-z8">
     <ng-container matColumnDef="id">
@@ -26,8 +65,13 @@
       <mat-cell *matCellDef="let shipment"> {{ shipment.type }} </mat-cell>
     </ng-container>
 
-    <mat-header-row *matHeaderRowDef="['id', 'status', 'type']"></mat-header-row>
-    <mat-row *matRowDef="let row; columns: ['id', 'status', 'type']"></mat-row>
+    <ng-container matColumnDef="weightCategory">
+      <mat-header-cell *matHeaderCellDef> Weight </mat-header-cell>
+      <mat-cell *matCellDef="let shipment"> {{ shipment.weightCategory }} </mat-cell>
+    </ng-container>
+
+    <mat-header-row *matHeaderRowDef="['id', 'status', 'type', 'weightCategory']"></mat-header-row>
+    <mat-row *matRowDef="let row; columns: ['id', 'status', 'type', 'weightCategory']"></mat-row>
   </mat-table>
 
   <mat-paginator [length]="totalRecord" [pageSize]="pageSize" [pageSizeOptions]="[5, 10, 20]" (page)="onPageChange($event)"></mat-paginator>
