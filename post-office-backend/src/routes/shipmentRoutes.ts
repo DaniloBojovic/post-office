@@ -25,8 +25,5 @@ router.get("/:id", getShipmentById);
 router.post("/", addShipment);
 router.put("/:id", updateShipment);
 router.delete("/:id", deleteShipment);
-// router.get("/", (req, res) => {
-//   res.send("Shipment routes placeholder");
-// });
 
 export default router;

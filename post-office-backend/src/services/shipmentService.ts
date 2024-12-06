@@ -37,19 +37,13 @@ export class ShipmentService {
       );
     }
 
-    //const total = shipments.length;
     const total = filteredShipments.length;
     const startIndex = (page - 1) * limit;
     const endIndex = page * limit;
-    //const paginatedShipments = shipments.slice(startIndex, endIndex);
     const paginatedShipments = filteredShipments.slice(startIndex, endIndex);
 
     return { data: paginatedShipments, total };
   }
-
-  //   getAllShipments(): Shipment[] {
-  //     return shipments;
-  //   }
 
   getShipmentById(id: number): Shipment | undefined {
     return shipments.find((shipment) => shipment.id === id);

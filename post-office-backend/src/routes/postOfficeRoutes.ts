@@ -10,11 +10,6 @@ import {
 
 const router = express.Router();
 
-// Placeholder for route
-// router.get("/", (req, res) => {
-//   res.send("Post Office routes placeholder");
-// });
-
 router.get("/", getAllPostOffices);
 router.get("/paging", getAllPostOfficesWithPaging);
 router.get("/:id", getPostOfficeById);

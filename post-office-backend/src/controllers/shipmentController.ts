@@ -33,11 +33,6 @@ export const getAllShipments = (req: Request, res: Response) => {
   res.json({ data, total, page, limit });
 };
 
-// export const getAllShipments = (req: Request, res: Response) => {
-//   const shipments = shipmentService.getAllShipments();
-//   res.json(shipments);
-// };
-
 export const getShipmentById = (req: Request, res: Response) => {
   const id = parseInt(req.params.id, 10);
   const shipment = shipmentService.getShipmentById(id);
