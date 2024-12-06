@@ -50,7 +50,6 @@ export class PostOfficeComponent implements OnInit, OnDestroy {
       page: event.pageIndex + 1,
       limit: event.pageSize,
     });
-    console.log(this.page);
   }
 
   openAddDialog(): void {

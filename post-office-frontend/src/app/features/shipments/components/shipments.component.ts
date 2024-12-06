@@ -42,7 +42,6 @@ export class ShipmentsComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.postOfficeService.getPostOffices().subscribe((postOffices) => {
       this.postOffices = postOffices;
-      console.log(this.postOffices);
     });
 
     combineLatest([
@@ -67,7 +66,6 @@ export class ShipmentsComponent implements OnInit, OnDestroy {
       )
       .subscribe((response) => {
         this.shipments = response.data;
-        console.log(this.shipments);
         this.totalRecord = response.total;
       });
 
@@ -81,7 +79,6 @@ export class ShipmentsComponent implements OnInit, OnDestroy {
       page: event.pageIndex + 1,
       limit: event.pageSize,
     });
-    console.log(this.page);
   }
 
   onStatusChange(status: string): void {
@@ -190,6 +187,6 @@ export class ShipmentsComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.unsubscribe$.next();
-    this.unsubscribe$.complete();
+    +this.unsubscribe$.complete();
   }
 }
