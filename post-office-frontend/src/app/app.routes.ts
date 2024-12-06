@@ -2,7 +2,6 @@ import { Routes } from '@angular/router';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'shipments', pathMatch: 'full' },
-  // { path: 'shipments', component: ShipmentsComponent },
   {
     path: 'shipments',
     loadComponent: () => import('./features/shipments/components/shipments.component').then((c) => c.ShipmentsComponent),

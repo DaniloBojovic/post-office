@@ -13,6 +13,7 @@ import { PostOffice } from '../../postOffices/models/postOffice.model';
 import { MatDialog } from '@angular/material/dialog';
 import { ShipmentDialogComponent } from './dialogs/shipment-dialog/shipment-dialog.component';
 import { MatButtonModule } from '@angular/material/button';
+import { DeleteDialogComponent } from '../../../shared/dialogs/delete-dialog/delete-dialog.component';
 
 @Component({
   selector: 'app-shipments',
@@ -74,8 +75,8 @@ export class ShipmentsComponent implements OnInit, OnDestroy {
   }
 
   onPageChange(event: { pageIndex: number; pageSize: number }): void {
-    this.page = event.pageIndex + 1; // Update this.page based on the paginator's current page
-    this.pageSize = event.pageSize; // Optional: Update page size if it changes
+    this.page = event.pageIndex + 1;
+    this.pageSize = event.pageSize;
     this.pagination$.next({
       page: event.pageIndex + 1,
       limit: event.pageSize,
@@ -135,11 +136,20 @@ export class ShipmentsComponent implements OnInit, OnDestroy {
   }
 
   deleteShipment(id: number): void {
-    if (confirm('Are you sure you want to delete this shipment?')) {
-      this.shipmentsService.deleteShipment(id).subscribe(() => {
-        this.handleDialogResult(false, true); // Delete operation
-      });
-    }
+    const dialogRef = this.dialog.open(DeleteDialogComponent, {
+      width: '400px',
+      height: '250px',
+      position: { top: '20vh' },
+      data: { message: 'Are you sure you want to delete this shipment?' },
+    });
+
+    dialogRef.afterClosed().subscribe((confirmed: boolean) => {
+      if (confirmed) {
+        this.shipmentsService.deleteShipment(id).subscribe(() => {
+          this.handleDialogResult(false, true);
+        });
+      }
+    });
   }
 
   private handleDialogResult(isAdding: boolean, isDeleting: boolean = false): void {

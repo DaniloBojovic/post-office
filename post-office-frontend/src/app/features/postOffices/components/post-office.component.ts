@@ -10,6 +10,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatTableModule } from '@angular/material/table';
 import { MatButtonModule } from '@angular/material/button';
 import { PostOfficeDialogComponent } from './dialogs/post-office-dialog.component';
+import { DeleteDialogComponent } from '../../../shared/dialogs/delete-dialog/delete-dialog.component';
 
 @Component({
   selector: 'app-post-office',
@@ -43,8 +44,8 @@ export class PostOfficeComponent implements OnInit, OnDestroy {
   }
 
   onPageChange(event: { pageIndex: number; pageSize: number }): void {
-    this.page = event.pageIndex + 1; // Update this.page based on the paginator's current page
-    this.pageSize = event.pageSize; // Optional: Update page size if it changes
+    this.page = event.pageIndex + 1;
+    this.pageSize = event.pageSize;
     this.pagination$.next({
       page: event.pageIndex + 1,
       limit: event.pageSize,
@@ -83,11 +84,20 @@ export class PostOfficeComponent implements OnInit, OnDestroy {
   }
 
   deletePostOffice(id: number): void {
-    if (confirm('Are you sure you want to delete this post office?')) {
-      this.postOfficeService.deletePostOffice(id).subscribe(() => {
-        this.handleDialogResult(false, true); // Delete operation
-      });
-    }
+    const dialogRef = this.dialog.open(DeleteDialogComponent, {
+      width: '400px',
+      height: '250px',
+      position: { top: '20vh' },
+      data: { message: 'Are you sure you want to delete this post office?' },
+    });
+
+    dialogRef.afterClosed().subscribe((confirmed: boolean) => {
+      if (confirmed) {
+        this.postOfficeService.deletePostOffice(id).subscribe(() => {
+          this.handleDialogResult(false, true);
+        });
+      }
+    });
   }
 
   private handleDialogResult(isAdding: boolean, isDeleting: boolean = false): void {
