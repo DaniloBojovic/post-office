@@ -1,0 +1,41 @@
+<div class="action-container">
+  <button mat-raised-button color="primary" (click)="openAddDialog()">Add Post Office</button>
+</div>
+
+<div class="post-office-container">
+  <mat-table [dataSource]="postOffices" class="mat-elevation-z8">
+    <!-- ID Column -->
+    <ng-container matColumnDef="id">
+      <mat-header-cell *matHeaderCellDef> ID </mat-header-cell>
+      <mat-cell *matCellDef="let postOffice"> {{ postOffice.id }} </mat-cell>
+    </ng-container>
+
+    <!-- Name Column -->
+    <ng-container matColumnDef="name">
+      <mat-header-cell *matHeaderCellDef> Name </mat-header-cell>
+      <mat-cell *matCellDef="let postOffice"> {{ postOffice.name }} </mat-cell>
+    </ng-container>
+
+    <!-- ZIP Code Column -->
+    <ng-container matColumnDef="zipCode">
+      <mat-header-cell *matHeaderCellDef> ZIP Code </mat-header-cell>
+      <mat-cell *matCellDef="let postOffice"> {{ postOffice.zipCode }} </mat-cell>
+    </ng-container>
+
+    <!-- Actions Column -->
+    <ng-container matColumnDef="actions">
+      <mat-header-cell *matHeaderCellDef> Actions </mat-header-cell>
+      <mat-cell *matCellDef="let postOffice">
+        <button mat-button color="accent" (click)="openEditDialog(postOffice)">Edit</button>
+        <button mat-button color="warn" (click)="deletePostOffice(postOffice.id)">Delete</button>
+      </mat-cell>
+    </ng-container>
+
+    <!-- Header and Rows -->
+    <mat-header-row *matHeaderRowDef="['id', 'name', 'zipCode', 'actions']"></mat-header-row>
+    <mat-row *matRowDef="let row; columns: ['id', 'name', 'zipCode', 'actions']"></mat-row>
+  </mat-table>
+
+  <!-- Paginator -->
+  <mat-paginator [length]="totalRecord" [pageSize]="pageSize" [pageSizeOptions]="[5, 10, 20]" (page)="onPageChange($event)"></mat-paginator>
+</div>

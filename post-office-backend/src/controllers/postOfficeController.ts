@@ -10,6 +10,19 @@ export const getAllPostOffices = (req: Request, res: Response) => {
   res.json(postOffices);
 };
 
+export const getAllPostOfficesWithPaging = (req: Request, res: Response) => {
+  const page = parseInt(req.query.page as string) || 1;
+  const limit = parseInt(req.query.limit as string) || 10;
+
+  if (page <= 0 || limit <= 0) {
+    res.status(400).json({ error: "Page and limit must be positive integers." });
+    return;
+  }
+
+  const { data, total } = postOfficeService.getAllPostOfficesWithPaging(page, limit);
+  res.json({ data, total, page, limit });
+};
+
 export const getPostOfficeById = (req: Request, res: Response) => {
   const id = parseInt(req.params.id, 10);
   const postOffice = postOfficeService.getPostOfficeById(id);

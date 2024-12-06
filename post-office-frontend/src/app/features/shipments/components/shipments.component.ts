@@ -1,21 +1,27 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Shipment, ShipmentsService } from '../services/shipments.service';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { ShipmentsService } from '../services/shipments.service';
 import { MatTableModule } from '@angular/material/table';
 import { combineLatest, debounceTime, startWith, Subject, switchMap, takeUntil } from 'rxjs';
-import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { PostOfficeService } from '../../postOffices/services/post-office.service';
 import { CommonModule } from '@angular/common';
+import { Shipment } from '../models/shipment.model';
+import { PostOffice } from '../../postOffices/models/postOffice.model';
+import { MatDialog } from '@angular/material/dialog';
+import { ShipmentDialogComponent } from './dialogs/shipment-dialog/shipment-dialog.component';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'app-shipments',
-  imports: [CommonModule, MatTableModule, MatPaginatorModule, MatFormFieldModule, MatInputModule, MatSelectModule],
+  imports: [CommonModule, MatTableModule, MatPaginatorModule, MatButtonModule, MatFormFieldModule, MatInputModule, MatSelectModule],
   templateUrl: './shipments.component.html',
   styleUrl: './shipments.component.scss',
 })
 export class ShipmentsComponent implements OnInit, OnDestroy {
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
   private unsubscribe$ = new Subject<void>();
   private statusFilter$ = new Subject<string>();
   private weightFilter$ = new Subject<string>();
@@ -24,13 +30,13 @@ export class ShipmentsComponent implements OnInit, OnDestroy {
   private destinationPostOfficeFilter$ = new Subject<number | null>();
   private pagination$ = new Subject<{ page: number; limit: number }>();
 
-  postOffices: { id: number; name: string; zipCode: string }[] = [];
+  postOffices: PostOffice[] = [];
   shipments: Shipment[] = [];
   totalRecord = 0;
   page = 1;
   pageSize = 10;
 
-  constructor(private shipmentsService: ShipmentsService, private postOfficeService: PostOfficeService) {}
+  constructor(private shipmentsService: ShipmentsService, private postOfficeService: PostOfficeService, private dialog: MatDialog) {}
 
   ngOnInit(): void {
     this.postOfficeService.getPostOffices().subscribe((postOffices) => {
@@ -65,50 +71,28 @@ export class ShipmentsComponent implements OnInit, OnDestroy {
       });
 
     this.pagination$.next({ page: this.page, limit: this.pageSize });
-
-    // this.pagination$
-    //   .pipe(
-    //     switchMap(({ page, limit }) => this.shipmentsService.getShipments(page, limit)),
-    //     takeUntil(this.unsubscribe$)
-    //   )
-    //   .subscribe((response) => {
-    //     this.shipments = response.data;
-    //     this.totalRecord = response.total;
-    //   });
-
-    // this.pagination$.next({ page: this.page, limit: this.pageSize });
-
-    // this.shipmentsService
-    //   .getShipments()
-    //   .pipe(takeUntil(this.unsubscribe$))
-    //   .subscribe((response: any) => {
-    //     this.shipments = response.data;
-    //     console.log('Shipments:', this.shipments);
-    //   });
   }
 
   onPageChange(event: { pageIndex: number; pageSize: number }): void {
+    this.page = event.pageIndex + 1; // Update this.page based on the paginator's current page
+    this.pageSize = event.pageSize; // Optional: Update page size if it changes
     this.pagination$.next({
       page: event.pageIndex + 1,
       limit: event.pageSize,
     });
+    console.log(this.page);
   }
 
   onStatusChange(status: string): void {
-    debugger;
     this.statusFilter$.next(status);
   }
 
   onWeightChange(weight: string): void {
-    debugger;
     this.weightFilter$.next(weight);
   }
 
   onIdChange(event: Event): void {
-    debugger;
-    const input = event.target as HTMLInputElement;
-    const id = input?.value || '';
-    // const id = (event.target as HTMLInputElement).value || '';
+    const id = (event.target as HTMLInputElement).value || '';
     this.idFilter$.next(id);
   }
 
@@ -118,6 +102,80 @@ export class ShipmentsComponent implements OnInit, OnDestroy {
 
   onDestinationPostOfficeChange(postOfficeId: number | null): void {
     this.destinationPostOfficeFilter$.next(postOfficeId);
+  }
+
+  openAddDialog(): void {
+    const dialogRef = this.dialog.open(ShipmentDialogComponent, {
+      width: '400px',
+      data: { shipment: null },
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        this.shipmentsService.addShipment(result).subscribe(() => {
+          this.handleDialogResult(true);
+        });
+      }
+    });
+  }
+
+  openEditDialog(shipment: Shipment): void {
+    const dialogRef = this.dialog.open(ShipmentDialogComponent, {
+      width: '400px',
+      data: { shipment },
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        this.shipmentsService.updateShipment(shipment.id, result).subscribe(() => {
+          this.handleDialogResult(false);
+        });
+      }
+    });
+  }
+
+  deleteShipment(id: number): void {
+    if (confirm('Are you sure you want to delete this shipment?')) {
+      this.shipmentsService.deleteShipment(id).subscribe(() => {
+        this.handleDialogResult(false, true); // Delete operation
+      });
+    }
+  }
+
+  private handleDialogResult(isAdding: boolean, isDeleting: boolean = false): void {
+    this.updateTotalRecords(isAdding, isDeleting);
+    this.adjustCurrentPage(isAdding, isDeleting);
+
+    this.refresh();
+  }
+
+  private updateTotalRecords(isAdding: boolean, isDeleting: boolean): void {
+    if (isAdding) {
+      this.totalRecord += 1;
+    } else if (isDeleting) {
+      this.totalRecord -= 1;
+    }
+  }
+
+  private adjustCurrentPage(isAdding: boolean, isDeleting: boolean): void {
+    const totalPages = Math.ceil(this.totalRecord / this.pageSize);
+
+    if (isAdding && this.page < totalPages) {
+      this.page = totalPages;
+    } else if (isDeleting && this.page > totalPages) {
+      this.page = totalPages;
+    }
+  }
+
+  refresh(): void {
+    const totalPages = Math.ceil(this.totalRecord / this.pageSize);
+    this.page = Math.min(this.page, totalPages);
+    if (this.paginator) {
+      this.paginator.pageIndex = this.page - 1;
+      this.paginator._changePageSize(this.pageSize);
+    }
+
+    this.pagination$.next({ page: this.page, limit: this.pageSize });
   }
 
   ngOnDestroy(): void {

@@ -6,6 +6,14 @@ export class PostOfficeService {
     return postOffices;
   }
 
+  getAllPostOfficesWithPaging(page: number, limit: number): { data: PostOffice[]; total: number } {
+    const total = postOffices.length;
+    const startIndex = (page - 1) * limit;
+    const endIndex = page * limit;
+    const paginatedPostOffices = postOffices.slice(startIndex, endIndex);
+    return { data: paginatedPostOffices, total };
+  }
+
   getPostOfficeById(id: number): PostOffice | undefined {
     return postOffices.find((office) => office.id === id);
   }

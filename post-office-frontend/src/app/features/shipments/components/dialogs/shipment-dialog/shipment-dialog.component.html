@@ -1,0 +1,48 @@
+<h2 mat-dialog-title>{{ data.shipment ? "Edit Shipment" : "Add Shipment" }}</h2>
+<mat-dialog-content>
+  <form [formGroup]="form">
+    <mat-form-field appearance="fill">
+      <mat-label>Type</mat-label>
+      <mat-select formControlName="type">
+        <mat-option value="Letter">Letter</mat-option>
+        <mat-option value="Package">Package</mat-option>
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field appearance="fill">
+      <mat-label>Status</mat-label>
+      <mat-select formControlName="status">
+        <mat-option value="Origin">Origin</mat-option>
+        <mat-option value="Destination">Destination</mat-option>
+        <mat-option value="Delivered">Delivered</mat-option>
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field appearance="fill">
+      <mat-label>Weight</mat-label>
+      <mat-select formControlName="weightCategory">
+        <mat-option value="LessThan1kg">Less than 1kg</mat-option>
+        <mat-option value="Between1kgAnd5kg">Between 1kg and 5kg</mat-option>
+        <mat-option value="MoreThan5kg">More than 5kg</mat-option>
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field appearance="fill">
+      <mat-label>Origin Post Office</mat-label>
+      <mat-select formControlName="originPostOfficeId">
+        <mat-option *ngFor="let postOffice of postOffices" [value]="postOffice.id">
+          {{ postOffice.name }} ({{ postOffice.zipCode }})
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field appearance="fill">
+      <mat-label>Destination Post Office</mat-label>
+      <mat-select formControlName="destinationPostOfficeId">
+        <mat-option *ngFor="let postOffice of postOffices" [value]="postOffice.id">
+          {{ postOffice.name }} ({{ postOffice.zipCode }})
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+  </form>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <button mat-button mat-dialog-close>Cancel</button>
+  <button mat-raised-button color="primary" (click)="save()">Save</button>
+</mat-dialog-actions>
