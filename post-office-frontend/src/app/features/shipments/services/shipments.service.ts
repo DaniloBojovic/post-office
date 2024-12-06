@@ -2,18 +2,15 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Shipment } from '../models/shipment.model';
+import { environment } from '../../../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ShipmentsService {
-  private apiUrl = 'http://localhost:3000/shipments';
+  private apiUrl = `${environment.apiUrl}/shipments`;
 
   constructor(private http: HttpClient) {}
-
-  // getShipments(): Observable<Shipment[]> {
-  //   return this.http.get<Shipment[]>(this.apiUrl);
-  // }
 
   getShipments(
     page: number,
@@ -28,7 +25,6 @@ export class ShipmentsService {
   ): Observable<{ data: Shipment[]; total: number }> {
     const params: any = { page, limit, ...filters };
     return this.http.get<{ data: Shipment[]; total: number }>(this.apiUrl, { params });
-    //return this.http.get<{ data: Shipment[]; total: number }>(`${this.apiUrl}?page=${page}&limit=${limit}`);
   }
 
   getShipmentById(id: number): Observable<Shipment> {

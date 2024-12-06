@@ -7,10 +7,11 @@ import { MatSelectModule } from '@angular/material/select';
 import { PostOfficeService } from '../../../../postOffices/services/post-office.service';
 import { PostOffice } from '../../../../postOffices/models/postOffice.model';
 import { CommonModule } from '@angular/common';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'app-shipment-dialog',
-  imports: [CommonModule, MatDialogModule, ReactiveFormsModule, MatFormFieldModule, MatSelectModule],
+  imports: [CommonModule, MatDialogModule, ReactiveFormsModule, MatFormFieldModule, MatSelectModule, MatButtonModule],
   templateUrl: './shipment-dialog.component.html',
   styleUrl: './shipment-dialog.component.scss',
 })
