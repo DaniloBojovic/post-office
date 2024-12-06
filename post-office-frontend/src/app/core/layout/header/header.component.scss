@@ -2,38 +2,22 @@
   flex: 1 1 auto;
 }
 
-:host {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 10px 0;
-  background-color: #f8f8f8;
-  border-bottom: 1px solid #ddd;
-}
-
-nav {
-  display: flex;
-  gap: 20px;
-}
-
-button {
-  padding: 10px 20px;
+.header-toolbar {
+  padding: 0 16px;
   font-size: 16px;
+  font-weight: bold;
+}
+
+.app-title {
+  font-size: 20px;
   font-weight: 500;
-  color: #333;
-  background-color: #fff;
-  border: 2px solid #007bff;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: all 0.2s ease-in-out;
+}
 
-  &:hover {
-    background-color: #007bff;
-    color: #fff;
-  }
+button.mat-button {
+  margin: 0 8px;
+}
 
-  &.active {
-    background-color: #007bff;
-    color: #fff;
-  }
+button.mat-button.active {
+  font-weight: bold;
+  text-decoration: underline;
 }

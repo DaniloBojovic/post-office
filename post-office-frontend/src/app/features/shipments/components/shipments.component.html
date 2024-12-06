@@ -1,6 +1,6 @@
 <div class="filter-container">
   <!-- Status Filter -->
-  <mat-form-field appearance="fill">
+  <mat-form-field appearance="fill" class="filter-item">
     <mat-label>Status</mat-label>
     <mat-select (selectionChange)="onStatusChange($event.value)">
       <mat-option value="">All</mat-option>
@@ -10,7 +10,7 @@
     </mat-select>
   </mat-form-field>
   <!-- Weight Filter -->
-  <mat-form-field appearance="fill">
+  <mat-form-field appearance="fill" class="filter-item">
     <mat-label>Weight</mat-label>
     <mat-select (selectionChange)="onWeightChange($event.value)">
       <mat-option value="">All</mat-option>
@@ -20,13 +20,13 @@
     </mat-select>
   </mat-form-field>
   <!-- Package ID Filter -->
-  <mat-form-field appearance="fill">
+  <mat-form-field appearance="fill" class="filter-item">
     <mat-label>Package ID</mat-label>
     <input matInput type="text" (input)="onIdChange($event)" placeholder="Enter Package ID" />
   </mat-form-field>
 
   <!-- Origin Post Office Filter -->
-  <mat-form-field appearance="fill">
+  <mat-form-field appearance="fill" class="filter-item">
     <mat-label>Origin Post Office</mat-label>
     <mat-select (selectionChange)="onOriginPostOfficeChange($event.value)">
       <mat-option [value]="null">All Post Offices</mat-option>
@@ -35,18 +35,18 @@
       </mat-option>
     </mat-select>
   </mat-form-field>
-</div>
 
-<!-- Destination Post Office Filter -->
-<mat-form-field appearance="fill">
-  <mat-label>Destination Post Office</mat-label>
-  <mat-select (selectionChange)="onDestinationPostOfficeChange($event.value)">
-    <mat-option [value]="null">All Post Offices</mat-option>
-    <mat-option *ngFor="let postOffice of postOffices" [value]="postOffice.id">
-      {{ postOffice.name }} ({{ postOffice.zipCode }})
-    </mat-option>
-  </mat-select>
-</mat-form-field>
+  <!-- Destination Post Office Filter -->
+  <mat-form-field appearance="fill" class="filter-item">
+    <mat-label>Destination Post Office</mat-label>
+    <mat-select (selectionChange)="onDestinationPostOfficeChange($event.value)">
+      <mat-option [value]="null">All Post Offices</mat-option>
+      <mat-option *ngFor="let postOffice of postOffices" [value]="postOffice.id">
+        {{ postOffice.name }} ({{ postOffice.zipCode }})
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+</div>
 
 <div class="action-container">
   <button mat-raised-button color="primary" (click)="openAddDialog()">Add Shipment</button>
