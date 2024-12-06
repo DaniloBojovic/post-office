@@ -27,8 +27,6 @@ export const getAllShipments = (req: Request, res: Response) => {
         : null,
   };
 
-  console.log("filters: ", filters);
-
   const { data, total } = shipmentService.getAllShipments(page, limit, filters);
   res.json({ data, total, page, limit });
 };
@@ -57,8 +55,6 @@ export const filterShipmentsByStatus = (req: Request, res: Response) => {
 
 export const filterShipmentsByWeight = (req: Request, res: Response) => {
   const weightCategory = req.query.weightCategory as WeightCategory;
-  console.log("weightCategory: ", weightCategory);
-  console.log("WeightCategory#ies: ", Object.values(WeightCategory));
 
   if (!Object.values(WeightCategory).includes(weightCategory)) {
     res.status(400).json({ error: "Invalid or missing 'weightCategory' query parameter." });
@@ -66,7 +62,6 @@ export const filterShipmentsByWeight = (req: Request, res: Response) => {
   }
 
   const filteredShipments = shipmentService.filterShipmentsByWeight(weightCategory);
-  console.log("filteredShipments: ", filteredShipments);
 
   if (filteredShipments.length === 0) {
     res.status(404).json({ error: "No shipments found for the given weight filter." });
